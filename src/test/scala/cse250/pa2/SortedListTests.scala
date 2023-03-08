@@ -272,6 +272,7 @@ class SortedListTests extends AnyFlatSpec {
 
   }
   //Define the removal functions
+
   it should "def remove(ref: SortedListNode[T]):" in {
     val list = new SortedList[Int]()
     list.insert(1)
@@ -329,9 +330,57 @@ class SortedListTests extends AnyFlatSpec {
     assert(removedValue == 1)
     assert(node1.value == 3)
     assert(node1.next.get.value == 4)
+  }
+  it should "def removeAll(ref: SortedListNode[T]): T"in {
+    val list = new SortedList[Int]()
+    // Test case for remove
+    val node1 = list.insert(1)
+    val node2 = list.insert(2)
+    val node3 = list.insert(3)
+    val node4 = list.insert(3)
+    val node5 = list.insert(4)
+    val node6 = list.insert(5)
+    node1.next = Some(node2)
+    node2.next = Some(node3)
+    node3.next = Some(node4)
+    node4.next = Some(node5)
+    node5.next = Some(node6)
 
+    assert(list.remove(node4) == 3)
+    assert(node3.next eq node5)
+    assert(list.remove(node1) == 1)
+    assert(node1.next eq node2)
 
+    // Test case for removeN
+    val node7 = list.insert(2)
+    val node8 = list.insert(2)
+    val node9 =list.insert(3)
+    val node10 = list.insert(4)
+    val node11 = list.insert(4)
+    node7.next = Some(node8)
+    node8.next = Some(node9)
+    node9.next = Some(node10)
+    node10.next = Some(node11)
+
+    assert(list.removeN(node8, 2) == 2)
+    assert(node7.next eq node9)
+    assert(list.removeN(node10, 1) == 4)
+    assert(node10.next eq node11)
+    assert(list.removeN(node9, 0) == 3)
+    try {
+      list.removeN(node11, 3)
+      assert(false, "IllegalArgumentException not raised")
+    } catch {
+      case _: IllegalArgumentException => assert(true)
+      case _ => assert(false, "Unexpected exception")
+    }
+
+    // Test case for removeAll
+    val node12 = list.insert(1)
+    val node13 = list.insert(2)
+    val node14 = list.insert(2)
 
 
   }
+
 }
