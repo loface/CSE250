@@ -429,18 +429,20 @@ it should "def insert(elem: T, hint): SortedListNode[T]"in{
 
     var removedValue = list.removeAll(node4)
     assert(removedValue == 3)
-    assert(node1.next.get.next.get.value == 4)
+    assert(node1.next.get.next.get.next.get.value == 4)
 
     removedValue = list.removeAll(node2)
     assert(removedValue == 2)
-    assert(node1.next.get.value == 1)
-    assert(node1.next.get.next.get.value == 3)
-    assert(node1.next.get.next.get.next.get.value == 4)
+    assert(node1.value == 1)
+    assert(node1.next.get.value == 3)
+    assert(node1.next.get.next.get.value == 4)
 
     removedValue = list.removeAll(node1)
     assert(removedValue == 1)
-    assert(node1.value == 3)
-    assert(node1.next.get.value == 4)
+    assert(node1.value == 2)
+    assert(node1.next.get == 2)
+    assert(node1.next.get.next.get.value == 3)
+    assert(node1.next.get.next.get.next.get.value == 4)
   }
 
 }
