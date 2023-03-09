@@ -490,8 +490,10 @@ it should "def insert(elem: T, hint): SortedListNode[T]"in{
     val n = 4
 
     val node3 = list.headNode.get.next.get.next.get
-    assertThrows(IllegalArgumentException)
-    list.removeN(node3, n)
+    assertThrows[IllegalArgumentException] {
+      list.removeN(node3, n)
+    }
+
   }
   it should "def removeAll(ref: SortedListNode[T]): T"in{
     val list = new SortedList[Int]()
