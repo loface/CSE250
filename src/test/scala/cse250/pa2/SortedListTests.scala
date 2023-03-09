@@ -370,13 +370,14 @@ it should "def insert(elem: T, hint): SortedListNode[T]"in{
   val newNode3 = list.insert(5, node4)
   assert(newNode3.value == 5)
 
-  assert(list.length == 6)
+  assert(list.length == 7)
   assert(list.apply(0) == 0)
   assert(list.apply(1) == 1)
   assert(list.apply(2) == 2)
   assert(list.apply(3) == 3)
   assert(list.apply(4) == 3)
   assert(list.apply(5) == 4)
+  assert(list.apply(6) == 5)
 
 }
 
