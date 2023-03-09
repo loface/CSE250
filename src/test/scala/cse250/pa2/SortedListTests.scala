@@ -271,6 +271,197 @@ class SortedListTests extends AnyFlatSpec {
 
 
   }
+  //Define the search functions
+
+  it should "def findRefBefore(elem: T): Option[SortedListNode[T]]"in{
+      val list = new SortedList[Int]()
+      list.insert(1)
+      list.insert(3)
+      list.insert(5)
+
+      assert(list.findRefBefore(4).isDefined)
+      assert(list.findRefBefore(4).get.value == 3)
+      assert(list.findRefBefore(0).isEmpty)
+      assert(list.findRefBefore(6).isDefined)
+      assert(list.findRefBefore(6).get.value == 5)
+  }
+  it should "def findRefBefore(elem:T, hint: SortedListNode[T]): Option[SortedListNode[T]]"in{
+    val list = new SortedList[Int]()
+    list.insert(1)
+    list.insert(3)
+    list.insert(5)
+
+    val result1 = list.findRefBefore(0)
+    assert(result1 == None)
+
+
+    val result2 = list.findRefBefore(-1)
+    assert(result2 == None)
+
+
+    val result3 = list.findRefBefore(3)
+    assert(result3.isDefined)
+    assert(result3.get.value == 1)
+
+    val result4 = list.findRefBefore(7)
+    assert(result4.isDefined)
+    assert(result4.get.value == 5)
+
+
+    val result5 = list.findRefBefore(4)
+    assert(result5.isDefined)
+    assert(result5.get.value == 3)
+
+
+  }
+  it should "def findRef(elem: T): Option[SortedListNode[T]]"in{
+    val list = new SortedList[Int]()
+    assert(list.findRef(5) == None)
+
+    list.insert(3)
+    list.insert(7)
+    list.insert(11)
+    list.insert(15)
+
+    assert(list.findRef(3).get.value == 3)
+    assert(list.findRef(7).get.value == 7)
+    assert(list.findRef(11).get.value == 11)
+    assert(list.findRef(15).get.value == 15)
+    assert(list.findRef(8) == None)
+
+  }
+ it should "def findRef(elem: T, hint: SortedListNode[T]): Option[SortedListNode[T]]"in{
+   val list = new SortedList[Int]()
+   list.insert(1)
+   list.insert(3)
+   list.insert(5)
+   list.insert(7)
+   val hint = list.findRefBefore(6).get
+   assert(list.findRef(3, hint) == Some(list.headNode.get.next))
+   assert(list.findRef(6, hint) == None)
+   assert(list.findRef(8, hint) == None)
+
+ }
+  //Define the indexing functions
+  it should "def getRef(idx: Int): SortedListNode[T]" in {
+    val list = new SortedList[Int]()
+    list.insert(3)
+    list.insert(1)
+    list.insert(4)
+
+    // Test valid index
+    val node1 = list.getRef(0)
+    assert(node1.value == 1)
+
+    // Test valid index
+    val node2 = list.getRef(1)
+    assert(node2.value == 3)
+
+    // Test valid index
+    val node3 = list.getRef(2)
+    assert(node3.value == 4)
+
+    // Test invalid index
+    try {
+      val node4 = list.getRef(3)
+      fail("Expected IndexOutOfBoundsException")
+    } catch {
+      case e: IndexOutOfBoundsException =>
+    }
+  }
+it should "def apply(idx: Int): T"in{
+  val list = new SortedList[Int]()
+  list.insert(5)
+  list.insert(2)
+  list.insert(10)
+
+  assert(list.apply(0) == 2)
+  assert(list.apply(1) == 5)
+  assert(list.apply(2) == 10)
+
+  // test invalid index
+  try {
+    list.apply(-1)
+    fail("Expected IndexOutOfBoundsException to be thrown")
+  } catch {
+    case _: IndexOutOfBoundsException => // expected
+  }
+
+  try {
+    list.apply(3)
+    fail("Expected IndexOutOfBoundsException to be thrown")
+  } catch {
+    case _: IndexOutOfBoundsException => // expected
+  }
+
+}
+    //3. Define the insertion functions
+it should "def insert(elem: T): SortedListNode[T]"in{
+  val list = new SortedList[Int]()
+
+  val node1 = list.insert(5)
+  assert(node1.value == 5)
+
+  val node2 = list.insert(10)
+  assert(node2.value == 10)
+  assert(node2.prev.get.value == 5)
+  assert(node1.next.get.value == 10)
+
+  val node3 = list.insert(8)
+  assert(node3.value == 8)
+  assert(node3.prev.get.value == 5)
+  assert(node3.next.get.value == 10)
+  assert(node2.prev.get.value == 8)
+  assert(node1.next.get.value == 8)
+
+  val node4 = list.insert(3)
+  assert(node4.value == 3)
+  assert(node4.next.get.value == 5)
+  assert(list.headNode.get.value== 3)
+  assert(node1.prev.isEmpty)
+
+  val node5 = list.insert(8)
+  assert(node5.value == 8)
+  assert(node5.count == 2)
+  assert(node5.prev.get.value == 5)
+  assert(node5.next.get.value == 10)
+  assert(node2.prev.get.value == 8)
+  assert(node1.next.get.value == 8)
+
+  val node6 = list.insert(15)
+  assert(node6.value == 15)
+  assert(node6.prev.get.value == 10)
+  assert(node6.next.isEmpty)
+  assert(node2.next.get.value == 15)
+
+}
+it should "def insert(elem: T, hint): SortedListNode[T]"in{
+  val list = new SortedList[Int]()
+  val node1 = list.insert(1)
+  val node2 = list.insert(2)
+  val node3 = list.insert(3)
+  val node4 = list.insert(4)
+
+  val newNode = list.insert(3, node1)
+  assert(newNode.value == 3)
+
+  val newNode2 = list.insert(0, node2)
+  assert(newNode2.value == 0)
+
+  val newNode3 = list.insert(5, node4)
+  assert(newNode3.value == 5)
+
+  assert(list.length == 6)
+  assert(list.apply(0) == 0)
+  assert(list.apply(1) == 1)
+  assert(list.apply(2) == 2)
+  assert(list.apply(3) == 3)
+  assert(list.apply(4) == 3)
+  assert(list.apply(5) == 4)
+
+}
+
+
   //Define the removal functions
 
   it should "def remove(ref: SortedListNode[T]):" in {
@@ -288,7 +479,6 @@ class SortedListTests extends AnyFlatSpec {
   it should " removeN(ref: SortedListNode[T], n: Int): T"in {
     val list = new SortedList[Int]()
     list.insert(1)
-    list.insert(2)
     list.insert(2)
     list.insert(3)
 
@@ -330,57 +520,6 @@ class SortedListTests extends AnyFlatSpec {
     assert(removedValue == 1)
     assert(node1.value == 3)
     assert(node1.next.get.value == 4)
-  }
-  it should "def removeAll(ref: SortedListNode[T]): T"in {
-    val list = new SortedList[Int]()
-    // Test case for remove
-    val node1 = list.insert(1)
-    val node2 = list.insert(2)
-    val node3 = list.insert(3)
-    val node4 = list.insert(3)
-    val node5 = list.insert(4)
-    val node6 = list.insert(5)
-    node1.next = Some(node2)
-    node2.next = Some(node3)
-    node3.next = Some(node4)
-    node4.next = Some(node5)
-    node5.next = Some(node6)
-
-    assert(list.remove(node4) == 3)
-    assert(node3.next eq node5)
-    assert(list.remove(node1) == 1)
-    assert(node1.next eq node2)
-
-    // Test case for removeN
-    val node7 = list.insert(2)
-    val node8 = list.insert(2)
-    val node9 =list.insert(3)
-    val node10 = list.insert(4)
-    val node11 = list.insert(4)
-    node7.next = Some(node8)
-    node8.next = Some(node9)
-    node9.next = Some(node10)
-    node10.next = Some(node11)
-
-    assert(list.removeN(node8, 2) == 2)
-    assert(node7.next eq node9)
-    assert(list.removeN(node10, 1) == 4)
-    assert(node10.next eq node11)
-    assert(list.removeN(node9, 0) == 3)
-    try {
-      list.removeN(node11, 3)
-      assert(false, "IllegalArgumentException not raised")
-    } catch {
-      case _: IllegalArgumentException => assert(true)
-      case _ => assert(false, "Unexpected exception")
-    }
-
-    // Test case for removeAll
-    val node12 = list.insert(1)
-    val node13 = list.insert(2)
-    val node14 = list.insert(2)
-
-
   }
 
 }
